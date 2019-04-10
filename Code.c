@@ -10,14 +10,18 @@ sem_t semaphore;
 int size;
 pthread_mutex_t mutex;
 pthread_mutex_t mutex1;
-void main()
+void *processing(void *args);
+int main()
 {
-   int i ,j  , time=0,time1=0,position,temp,*ptr;
+   sem_init(&semaphore,1,1);
+   pthread_t process;
+   int i ,j  , time=0,time1=0,position,temp,*ptr,*ptr1;
     float average_waiting_time,average_turnaround_time;
     printf("Enter number of process:  ");
     scanf("%d",&size);
     ptr=&size;
     int burst_time[*ptr],arrival_time[*ptr],sequence[*ptr],completion_time[*ptr],turning_time[*ptr];
+	ptr1=&burst_time;
     for(i=0;i<size;i++)
     {
         printf("Enter Arrival Time of P%d : ",i+1);
@@ -47,7 +51,8 @@ void main()
         sequence[i]=sequence[position];
         sequence[position]=temp;
     }
- 
+ 	pthread_create(&process,NULL,processing,NULL);
+	pthread_join(&process,NULL);
     completion_time[0] = 0;
     for(i=1;i<size;i++)
     {
@@ -71,5 +76,12 @@ void main()
     average_turnaround_time=(float)time1/size;     
     printf("\n\nAverage Waiting Time=%f",average_waiting_time);
     printf("\nAverage Turnaround Time=%f\n",average_turnaround_time);
+	return 0;
+}
+
+void *processing(void *args)
+{
+	
+	
 }
 
