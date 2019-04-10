@@ -30,7 +30,6 @@ void main()
         printf("Enter Burst Time of P%d : ",i+1);
         scanf("%d",&burst_time[i]);          
     }
-
     for(i=0;i<size;i++)
     {
         position=i;
