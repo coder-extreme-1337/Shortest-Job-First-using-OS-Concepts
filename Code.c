@@ -62,7 +62,7 @@ void main()
         total+=D[i];
         printf("\np%d\t\t  %d\t\t    %d\t\t\t%d", B[i],A[i],C[i],D[i]);
     }
- 
+
     avg_D=(float)total/n;     
     printf("\n\nAverage Waiting Time=%f",avg_C);
     printf("\nAverage Turnaround Time=%f\n",avg_D);
