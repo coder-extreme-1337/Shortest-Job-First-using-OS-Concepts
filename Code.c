@@ -12,59 +12,65 @@ pthread_mutex_t mutex;
 pthread_mutex_t mutex1;
 void main()
 {
-    int A[20],B[20],C[20],D[20] ,i ,j ,n  , total=0,pos,temp;
-    float avg_C,avg_D;
-    printf("Enter number of process:");
-    scanf("%d",&n);
- 
-    printf("\nEnter Burst Time:\n");
-    for(i=0;i<n;i++)
+   int i ,j  , time=0,time1=0,position,temp,*ptr;
+    float average_waiting_time,average_turnaround_time;
+    printf("Enter number of process:  ");
+    scanf("%d",&size);
+    ptr=&size;
+    int burst_time[*ptr],arrival_time[*ptr],sequence[*ptr],completion_time[*ptr],turning_time[*ptr];
+    for(i=0;i<size;i++)
     {
-        printf("p%d:",i+1);
-        scanf("%d",&A[i]);
-        B[i]=i+1;           
+        printf("Enter Arrival Time of P%d : ",i+1);
+        scanf("%d",&arrival_time[i]);
+        sequence[i]=i+1;  
+	        
+    }
+    for(i=0;i<size;i++)
+    {
+        printf("Enter Burst Time of P%d : ",i+1);
+        scanf("%d",&burst_time[i]);          
     }
 
-    for(i=0;i<n;i++)
+    for(i=0;i<size;i++)
     {
-        pos=i;
-        for(j=i+1;j<n;j++)
+        position=i;
+        for(j=i+1;j<size;j++)
         {
-            if(A[j]<A[pos])
-                pos=j;
+            if(burst_time[j]<burst_time[position])
+                position=j;
         }
  
-        temp=A[i];
-        A[i]=A[pos];
-        A[pos]=temp;
+        temp=burst_time[i];
+        burst_time[i]=burst_time[position];
+    	burst_time[position]=temp;
  
-        temp=B[i];
-        B [i]=B[pos];
-        B [pos]=temp;
+        temp=sequence[i];
+        sequence[i]=sequence[position];
+        sequence[position]=temp;
     }
  
-    C[0] = 0;
-    for(i=1;i<n;i++)
+    completion_time[0] = 0;
+    for(i=1;i<size;i++)
     {
-        C[i]=0;
+        completion_time[i]=0;
         for(j=0;j<i;j++)
-            C[i]+=A[j];
+            completion_time[i]+=burst_time[j];
  
-        total+=C[i];
+        time+=completion_time[i];
     }
-  avg_C=(float)total/n;      
-     total=0;
+  	average_waiting_time=(float)time/size;      
+     time1=0;
  
     printf("\nProcess\t    Burst Time    \tWaiting Time\tTurnaround Time");
-    for(i=0;i<n;i++)
+    for(i=0;i<size;i++)
     {
-        D[i]=A[i]+C[i];     //calculate turnaround time
-        total+=D[i];
-        printf("\np%d\t\t  %d\t\t    %d\t\t\t%d", B[i],A[i],C[i],D[i]);
+        turning_time[i]=burst_time[i]+completion_time[i];     //calculate turnaround time
+        time1+=turning_time[i];
+        printf("\np%d\t\t  %d\t\t    %d\t\t\t%d", sequence[i],burst_time[i],completion_time[i],turning_time[i]);
     }
-
-    avg_D=(float)total/n;     
-    printf("\n\nAverage Waiting Time=%f",avg_C);
-    printf("\nAverage Turnaround Time=%f\n",avg_D);
+ 
+    average_turnaround_time=(float)time1/size;     
+    printf("\n\nAverage Waiting Time=%f",average_waiting_time);
+    printf("\nAverage Turnaround Time=%f\n",average_turnaround_time);
 }
 
