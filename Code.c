@@ -1,8 +1,18 @@
 #include<stdio.h>
- 
+#include<pthread.h>
+#include<semaphore.h>
+#include<fcntl.h>
+#include<sys/stat.h>
+#include<sys/types.h>
+#include<stdlib.h>
+#include<unistd.h>
+sem_t semaphore;
+int size;
+pthread_mutex_t mutex;
+pthread_mutex_t mutex1;
 int main()
 {
-    int burst_time[20],B[20],C[20],D[20] ,i ,j ,size,total=0,pos,temp;
+    int burst_time[20],B[20],C[20],D[20] ,i ,j,total=0,pos,temp;
     float avg_C,avg_D;
     printf("Enter number of process:");
     scanf("%d",&size);
