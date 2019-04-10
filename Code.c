@@ -1,9 +1,6 @@
 #include<stdio.h>
 #include<pthread.h>
 #include<semaphore.h>
-#include<fcntl.h>
-#include<sys/stat.h>
-#include<sys/types.h>
 #include<stdlib.h>
 #include<unistd.h>
 int size;
