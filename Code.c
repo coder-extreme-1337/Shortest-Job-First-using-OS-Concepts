@@ -6,22 +6,19 @@
 #include<sys/types.h>
 #include<stdlib.h>
 #include<unistd.h>
-sem_t semaphore;
 int size;
 pthread_mutex_t mutex;
 pthread_mutex_t mutex1;
-void *processing(void *args);
+
 int main()
 {
-   sem_init(&semaphore,1,1);
-   pthread_t process;
    int i ,j  , time=0,time1=0,position,temp,*ptr,*ptr1;
     float average_waiting_time,average_turnaround_time;
     printf("Enter number of process:  ");
     scanf("%d",&size);
     ptr=&size;
     int burst_time[*ptr],arrival_time[*ptr],sequence[*ptr],completion_time[*ptr],turning_time[*ptr];
-	ptr1=&burst_time;
+	
     for(i=0;i<size;i++)
     {
         printf("Enter Arrival Time of P%d : ",i+1);
@@ -50,9 +47,11 @@ int main()
         temp=sequence[i];
         sequence[i]=sequence[position];
         sequence[position]=temp;
+	    temp=arrival_time[i];
+         arrival_time[i]=arrival_time[position];
+        arrival_time[position]=temp;
     }
- 	pthread_create(&process,NULL,processing,NULL);
-	pthread_join(&process,NULL);
+ 	
     completion_time[0] = 0;
     for(i=1;i<size;i++)
     {
@@ -65,23 +64,40 @@ int main()
   	average_waiting_time=(float)time/size;      
      time1=0;
  
-    printf("\nProcess\t    Burst Time    \tWaiting Time\tTurnaround Time");
+    printf("\nProcess\t    Burst Time \t   Arrival Time   \tWaiting Time\tTurnaround Time");
     for(i=0;i<size;i++)
     {
         turning_time[i]=burst_time[i]+completion_time[i];     //calculate turnaround time
         time1+=turning_time[i];
-        printf("\np%d\t\t  %d\t\t    %d\t\t\t%d", sequence[i],burst_time[i],completion_time[i],turning_time[i]);
+        printf("\np%d\t\t  %d\t\t  %d\t\t  %d\t\t\t%d", sequence[i],burst_time[i],arrival_time[i],completion_time[i],turning_time[i]);
     }
  
     average_turnaround_time=(float)time1/size;     
     printf("\n\nAverage Waiting Time=%f",average_waiting_time);
     printf("\nAverage Turnaround Time=%f\n",average_turnaround_time);
+	for(i=0;i<size;i++)
+	{
+		if(burst_time[i]>10)
+		{
+			 pthread_mutex_lock(&mutex); 
+			printf("Process %d is executing for 10 seconds",sequence[i]);
+			sleep(10);
+			printf("\n\nCPU is IDLE\n");
+			sleep(3);
+			 pthread_mutex_unlock(&mutex); 
+		}
+		else
+		{
+			 pthread_mutex_lock(&mutex1); 
+		printf("Process %d is executing for %d seconds",sequence[i],burst_time[i]);	
+		sleep(burst_time[i]);
+		printf("\n\nCPU is IDLE\n");
+		sleep(3);
+		 pthread_mutex_unlock(&mutex1); 
+		}
+	}
+	
+	printf("\nTHANKYOU YOU FOR USING\nDEVELOPED BY:\nRAHUL VERMA \n11811619\nK18lE");
 	return 0;
-}
-
-void *processing(void *args)
-{
-	
-	
 }
 
